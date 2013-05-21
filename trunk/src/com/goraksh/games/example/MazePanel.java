@@ -61,7 +61,8 @@ public class MazePanel extends JPanel {
 	private List<BackTrackingMaze.Index> orderOfExitPath;
 	private Color BLOCKAGE = Color.gray;
 	private Color ALLOWED = Color.green;
-	public static final String BUG_IMAGE = "bug.jpg";
+	//public static final String BUG_IMAGE = "bug.jpg";
+	public static final String BUG_IMAGE = "walk-1.jpg";
 
 	public MazePanel() {
 		
@@ -120,9 +121,9 @@ public class MazePanel extends JPanel {
 		}
 	}
 
-	// public void paint( Graphics g ) {
-	// dopaintComponent(g);
-	// }
+	 //public void paint( Graphics g ) {
+		 //paintComponent(g);
+	 //}
 
 	/**
 	 * Paints the components of this panel
@@ -238,41 +239,50 @@ class GridLabel extends JLabel {
 		ImageIcon ii = new ImageIcon( ClassLoader.getSystemResource( MazePanel.BUG_IMAGE ));
 		flyImage = ii.getImage();
 	}
+	
+	private Image getImageIcon( String imageUrl ) {
+		ImageIcon ii = new ImageIcon( ClassLoader.getSystemResource( imageUrl ));
+		return ii.getImage();
+	}
 
 	private Color getColor() {
 		return this.color;
 	}
 
-public void dopaintComponent(Graphics g,  HashSet<String> imageDimensionSet ) {
+  public void dopaintComponent(Graphics g,  HashSet<String> imageDimensionSet ) {
 		g.setColor(getColor());
 
 		System.out.println("Painting this grid label: " + this.getX() + "::" + this.getY());
 		g.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 		
-		boolean toAdd = contains(imageDimensionSet, this.getX(), this.getY(), this.getWidth(), this.getHeight() );
+		int[] coordinates = contains(imageDimensionSet, this.getX(), this.getY(), this.getWidth(), this.getHeight() );
 	
-		if ( toAdd ) 
+		if ( coordinates != null ) 
 				addImage(g, this.getX(), this.getY(), this.getWidth() / 2,
-					this.getHeight() / 2);
+					this.getHeight() / 2, coordinates );
 		
 	}
 	
-	private boolean contains( HashSet<String> imageDimensionSet, int x, int y, int width, int height  ) {
+	private int[] contains( HashSet<String> imageDimensionSet, int x, int y, int width, int height  ) {
 		int jIndex = x/width;
 		int iIndex = y/height;
 		
 		
 		boolean isContains = imageDimensionSet.contains( jIndex + "" + iIndex  );
-		System.out.println("Checking  if this current label is contained in image set " + x + "::" + y + " Label Index(i,j) : " + jIndex + "::" + iIndex + " Looking for key(width:height)=" + ( jIndex + "" + iIndex ) + ". isContained ? " + isContains);
-		return isContains;
+		System.out.println("Checking  if this current label is contained in image set " + x + "::" + y + " Label Index(i,j) : " + iIndex + "::" + jIndex + " Looking for key(width:height)=" + ( jIndex + "" + iIndex ) + ". isContained ? " + isContains);
+	  return isContains ? 	new int[] { iIndex, jIndex } : null;
 	}
 
-	private void addImage(Graphics g, int x, int y, int width, int height) {
-		g.drawImage(getFlyImage(), x, y, width, height, null);
+	private void addImage(Graphics g, int x, int y, int width, int height, int[] coordinates ) {
+		System.out.println("Toggling fly image for(i,j) " + coordinates[0] + "::" + coordinates[1] + " ,for image total distance: "  + ( coordinates[0] + coordinates[1]) );
+		g.drawImage(getFlyImage(coordinates[0] + coordinates[1]), x, y, width, height, null);
 	}
 
-	Image getFlyImage() {
-		return this.flyImage;
+	
+	private Image getFlyImage(int totalDistance) {
+		//return this.flyImage;
+		ImageToggler toggler = ImageToggler.getInstance();
+		return getImageIcon( toggler.toggleAndGet(totalDistance) );
 	}
 
 }

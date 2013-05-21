@@ -7,6 +7,11 @@ import java.awt.Graphics;
 import javax.swing.Box;
 import javax.swing.JFrame;
 
+/**
+ * 
+ * @author niteshk
+ *
+ */
 public class MazeGrid extends JFrame {
 	
 	public MazeGrid() {
@@ -15,7 +20,7 @@ public class MazeGrid extends JFrame {
 		 add(new MazePanel());
 
 	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	        setSize(720, 600);
+	        setSize(860, 720);
 	        setLocationRelativeTo(null);
 	        setTitle("Maze");
 	        setVisible(true);
