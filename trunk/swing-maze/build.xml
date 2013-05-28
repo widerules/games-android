@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="maze-jar" name="Maze">
+    <property environment="env"/>
+    
+    <property name="PROJECT_NAME" value="mazs" />
+    
+    <property name="WAR_NAME" value="restful.war" />
+    
+    <property name="debuglevel" value="source,lines,vars"/>
+ 
+    <property name="build.classes.dir" value="build/classes"/>
+    <property name="dist.dir" value="dist"/>
+       
+    
+    
+    <property name="target" value="1.7"/>
+    <property name="source" value="1.7"/>
+    
+   
+   <path id="maze.classpath">
+        <pathelement location="${build.classes.dir}"/>
+    </path>
+   
+   <target name="init">
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+        <copy includeemptydirs="false" todir="${build.classes.dir}">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+   
+   <target name="clean">
+        <delete dir="${build.classes.dir}"/>
+    </target>
+   
+   <target  name="cleanall" depends="clean"/>
+   
+   <target name="build" depends="build-subprojects,build-project" />
+   
+   <target name="build-subprojects"/>
+   
+    <target name="build-project" depends="init" >
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${build.classes.dir}" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="maze.classpath"/>
+        </javac>
+    </target>
+    
+    <target name="build-refprojects" description="Build all projects which reference this project. Useful to propagate changes." />
+
+
+<target name="maze-jar"  depends="build" >
+<jar destfile="${dist.dir}/maze.jar" 
+     basedir="${build.classes.dir}"
+      >
+      <manifest>
+      <attribute name="Main-Class" value="com.goraksh.games.example.MazeGrid"/>
+     </manifest>
+</jar>
+</target>
+
+  <target name="run" depends="maze-jar" description="run the maze grid">
+           <java jar="${dist.dir}/maze.jar" fork="true">
+     
+          </java>
+  </target>
+
+
+
+</project>
